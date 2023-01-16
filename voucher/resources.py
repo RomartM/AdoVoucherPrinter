@@ -15,10 +15,19 @@ class VoucherResource(resources.ModelResource):
         skip_unchanged = True
         report_skipped = True
         import_id_fields = ('code',)
-        exclude = ('id', 'datetime',)
+        exclude = ('id', 'datetime', 'is_enable',)
         fields = (
             'credits',
             'code',
             'price',
             'max',
+            'batch_no',
         )
+
+    def __init__(self, batch_no=None):
+        super()
+        self.batch_no = batch_no
+
+    # Insert the contract into each row
+    def before_import_row(self, row, **kwargs):
+        row['batch_no'] = self.batch_no
